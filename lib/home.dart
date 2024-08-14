@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/tabs/settings.dart';
 import 'package:todo_app/tabs/tasks.dart';
+import 'package:todo_app/task_bottom_sheet.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -40,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
             builder: (context) => Padding(
               padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).viewInsets.bottom),
-         //     child: AddTaskBottomSheet(),
+              child: AddTaskBottomSheet(),
             ),
           );
         },
