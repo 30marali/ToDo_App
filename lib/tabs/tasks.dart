@@ -1,7 +1,7 @@
 import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
+import 'package:todo_app/firebase_functions.dart';
 import 'package:todo_app/task_item.dart';
-
 
 class TasksTab extends StatelessWidget {
   const TasksTab({super.key});
@@ -24,16 +24,37 @@ class TasksTab extends StatelessWidget {
           selectableDayPredicate: (date) => date.day != 27,
           locale: 'en',
         ),
-        SizedBox(height: 24),
+        SizedBox(height: 30),
         Expanded(
-          child: ListView.separated(
-            separatorBuilder: (context, index) => SizedBox(
-              height: 12,
-            ),
-            itemBuilder: (context, index) {
-              return TaskItem();
+          child: StreamBuilder(
+            stream: FirebaseFunctions.getTasks(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasError) {
+                return Column(
+                  children: [
+                    Text("Something went wrong"),
+                    ElevatedButton(onPressed: () {}, child: Text("try again"))
+                  ],
+                );
+              }
+              var tasks = snapshot.data?.docs.map((doc) => doc.data()).toList();
+
+              if (tasks?.isEmpty ?? true) {
+                return Text("No Tasks");
+              }
+              return ListView.separated(
+                separatorBuilder: (context, index) => SizedBox(
+                  height: 25,
+                ),
+                itemBuilder: (context, index) {
+                  return TaskItem(model: tasks[index]);
+                },
+                itemCount: tasks!.length,
+              );
             },
-            itemCount: 30,
           ),
         )
       ],

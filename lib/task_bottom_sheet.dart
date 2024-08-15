@@ -1,7 +1,10 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:todo_app/firebase_functions.dart';
+import 'package:todo_app/task_model.dart';
 
 class AddTaskBottomSheet extends StatefulWidget {
-  const AddTaskBottomSheet({super.key});
+  AddTaskBottomSheet({super.key});
 
   @override
   State<AddTaskBottomSheet> createState() => _AddTaskBottomSheetState();
@@ -10,10 +13,12 @@ class AddTaskBottomSheet extends StatefulWidget {
 class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
   DateTime selectedDate = DateTime.now();
 
+  var titleController = TextEditingController();
+  var descriptionController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Container(
-
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -30,10 +35,11 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
             ),
             SizedBox(height: 24),
             TextFormField(
+              controller: titleController,
               decoration: InputDecoration(
                   label: Text("Title"),
-                  border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(18)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(18)),
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(18))),
             ),
@@ -41,10 +47,11 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
               height: 18,
             ),
             TextFormField(
+              controller: descriptionController,
               decoration: InputDecoration(
                   label: Text("Description"),
-                  border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(18)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(18)),
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(18))),
             ),
@@ -71,7 +78,6 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20,
-                  // color: AppColors.primary,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -80,7 +86,15 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
               height: 18,
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                TaskModel model = TaskModel(
+                    description: descriptionController.text,
+                    title: titleController.text,
+                    date: selectedDate.millisecondsSinceEpoch);
+                FirebaseFunctions.addTask(model).then ((onValue) {
+                  Navigator.pop(context);
+                });
+              },
               child: Text(
                 "Add Task",
                 style: TextStyle(
