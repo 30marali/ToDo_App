@@ -1,94 +1,96 @@
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:todo_app/firebase_functions.dart';
 import 'package:todo_app/task_model.dart';
 
 
 class TaskItem extends StatelessWidget {
   TaskModel model;
-   TaskItem({required this.model , super.key});
+
+  TaskItem({required this.model, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 115,
-      margin: EdgeInsets.symmetric(horizontal: 12),
-      width: double.infinity,
-       decoration: BoxDecoration(
-           color: Colors.white, borderRadius: BorderRadius.circular(25)),
-      // child: Slidable(
-      //   startActionPane:
-      //   ActionPane(motion: DrawerMotion(), extentRatio: .6, children: [
-      //     SlidableAction(
-      //       onPressed: (context) {},
-      //       label: "Delete",
-      //       backgroundColor: Colors.red,
-      //       icon: Icons.delete,
-      //       spacing: 8,
-      //       padding: EdgeInsets.zero,
-      //       borderRadius: BorderRadius.only(
-      //           topLeft: Radius.circular(25), bottomLeft: Radius.circular(25)),
-      //     ),
-      //     SlidableAction(
-      //       onPressed: (context) {},
-      //       label: "Edit",
-      //       backgroundColor: Colors.blue,
-      //       icon: Icons.edit,
-      //       spacing: 8,
-      //     ),
-      //   ]),
-      //   child: Padding(
-          padding: const EdgeInsets.all(12.0),
+      margin: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Slidable(
+        startActionPane: ActionPane(motion: DrawerMotion(), children: [
+          SlidableAction(
+            onPressed: (context) {
+              FirebaseFunctions.deleteTask(model.id);
+            },
+            backgroundColor: Colors.red,
+            icon: Icons.delete,
+            label: "Delete",
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(18), topLeft: Radius.circular(18)),
+          ),
+          SlidableAction(
+            onPressed: (context) {},
+            label: "Edit",
+            backgroundColor: Colors.blue,
+            icon: Icons.edit,
+          ),
+        ]),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
               Container(
-                height: 80,
-                width: 4,
-                decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(25)),
-              ),
+                  height: 90,
+                  width: 2,
+                  color: model.isDone ? Colors.green : Colors.blue),
               SizedBox(
-                width: 12,
+                width: 18,
               ),
               Expanded(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       model.title,
                       style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600
-                      ),
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: model.isDone ? Colors.green : Colors.blue),
                     ),
                     Text(
                       model.description,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black,
-                      ),
+                      style: TextStyle(fontSize: 16),
                     ),
                   ],
                 ),
               ),
-              ElevatedButton(
-                onPressed: () {},
-                child: Icon(
-                  Icons.done,
-                  color: Colors.white,
-                  size: 30,
-                ),
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12))),
-              ),
+              model.isDone
+                  ? Text(
+                "DONE!!",
+                style: TextStyle(fontSize: 22, color: Colors.green),
+              )
+                  : IconButton(
+                  onPressed: () {
+                    model.isDone = true;
+                    FirebaseFunctions.updateTask(model);
+                  },
+                  padding: EdgeInsets.zero,
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      minimumSize: Size(80, 40),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12))),
+                  icon: Icon(
+                    Icons.done,
+                    size: 30,
+                    color: Colors.white,
+                  ))
             ],
           ),
-    //    ),
-    //  ),
+        ),
+      ),
     );
   }
 }

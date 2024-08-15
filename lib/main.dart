@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/firebase_options.dart';
 import 'package:todo_app/home.dart';
+import 'package:todo_app/tabs/settings.dart';
 
 void main() async {
 
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
       initialRoute: HomeScreen.routeName,
       routes: {
         HomeScreen.routeName: (context) => HomeScreen(),
+        SettingsTab.routeName: (context) => SettingsTab(),
       },
       debugShowCheckedModeBanner: false,
     );
