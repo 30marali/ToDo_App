@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_app/providers/theme_provider.dart';
+import 'package:todo_app/tabs/edit_screen.dart';
 import 'package:todo_app/tabs/settings.dart';
 import 'package:todo_app/tabs/tasks.dart';
 import 'package:todo_app/task_bottom_sheet.dart';
 
+import 'my_theme.dart';
+
 
 class HomeScreen extends StatefulWidget {
-  static const String routeName = "HomE";
+  static const String routeName = "Home";
 
   HomeScreen({super.key});
 
@@ -18,9 +23,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       extendBody: true,
-      backgroundColor: Color(0xFFdfecdb),
+      backgroundColor: themeProvider.mode == ThemeMode.light
+          ? MyThemeData.scafoldColor
+          : MyThemeData.darkColor,
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: const Text(
@@ -60,17 +68,18 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-       // color: Theme.of(context).primaryColor,
-        color: Colors.white,
+
+        color: themeProvider.mode == ThemeMode.light
+            ? MyThemeData.whiteColor
+            : Colors.black12,
+
         notchMargin: 8,
         padding: EdgeInsets.zero,
         shape: CircularNotchedRectangle(),
         child: BottomNavigationBar(
             elevation: 0,
             backgroundColor: Colors.transparent,
-            selectedItemColor: Colors.blue,
-            unselectedItemColor: Colors.grey,
-            showUnselectedLabels: false,
+
             currentIndex: selectedIndex,
             onTap: (value) {
               selectedIndex = value;
@@ -87,5 +96,5 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   String x="x>6 : true";
-  List<Widget> tabs = [TasksTab(), SettingsTab()];
+  List<Widget> tabs = [TasksTab(), SettingsTab(), EditScreen()];
 }

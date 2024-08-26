@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:todo_app/firebase_functions.dart';
-import 'package:todo_app/task_model.dart';
-
+import 'package:todo_app/models/task_model.dart';
+import 'package:todo_app/tabs/edit_screen.dart';
 
 class TaskItem extends StatelessWidget {
   TaskModel model;
@@ -31,7 +30,13 @@ class TaskItem extends StatelessWidget {
                 bottomLeft: Radius.circular(18), topLeft: Radius.circular(18)),
           ),
           SlidableAction(
-            onPressed: (context) {},
+            onPressed: (context) {
+              Navigator.pushNamed(
+                context,
+                EditScreen.routeName,
+                arguments: model,
+              );
+            },
             label: "Edit",
             backgroundColor: Colors.blue,
             icon: Icons.edit,
@@ -68,25 +73,28 @@ class TaskItem extends StatelessWidget {
               ),
               model.isDone
                   ? Text(
-                "DONE!!",
-                style: TextStyle(fontSize: 22, color: Colors.green),
-              )
+                      "DONE!!",
+                      style: TextStyle(
+                        fontSize: 22,
+                        color: Colors.green,
+                      ),
+                    )
                   : IconButton(
-                  onPressed: () {
-                    model.isDone = true;
-                    FirebaseFunctions.updateTask(model);
-                  },
-                  padding: EdgeInsets.zero,
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      minimumSize: Size(80, 40),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12))),
-                  icon: Icon(
-                    Icons.done,
-                    size: 30,
-                    color: Colors.white,
-                  ))
+                      onPressed: () {
+                        model.isDone = true;
+                        FirebaseFunctions.updateTask(model);
+                      },
+                      padding: EdgeInsets.zero,
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          minimumSize: Size(80, 40),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12))),
+                      icon: Icon(
+                        Icons.done,
+                        size: 30,
+                        color: Colors.white,
+                      ))
             ],
           ),
         ),

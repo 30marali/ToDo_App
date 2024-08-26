@@ -1,7 +1,10 @@
 import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_app/firebase_functions.dart';
 import 'package:todo_app/task_item.dart';
+
+import '../providers/theme_provider.dart';
 
 class TasksTab extends StatefulWidget {
   TasksTab({super.key});
@@ -15,6 +18,7 @@ class _TasksTabState extends State<TasksTab> {
 
   @override
   Widget build(BuildContext context) {
+    var themeProvider = Provider.of<ThemeProvider>(context);
     return Column(
       children: [
         CalendarTimeline(
@@ -26,8 +30,12 @@ class _TasksTabState extends State<TasksTab> {
             setState(() {});
           },
           leftMargin: 20,
-          monthColor: Colors.black,
-          dayColor: Colors.blue,
+          monthColor: themeProvider.mode == ThemeMode.light
+              ? Theme.of(context).colorScheme.primary
+              : Colors.white,
+          dayColor: themeProvider.mode == ThemeMode.light
+              ? Colors.blue
+              : Colors.white,
           activeDayColor: Colors.white,
           activeBackgroundDayColor: Colors.blue,
           dotColor: Colors.white,
